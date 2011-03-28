@@ -1,0 +1,13 @@
+Source: nagios-plugins-extra
+Section: net
+Priority: extra
+Maintainer: Sébastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
+Build-Depends: debhelper (>= 7.0.50), quilt (>=0.46-7)
+Standards-Version: 3.8.0
+Homepage: https://github.com/renard/nagios-plugins-extra
+
+Package: nagios-plugins-varnish
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, varnish
+Description: Plugin to monitor varnish proxy
+ Monitor Varnish status.

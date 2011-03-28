@@ -1,0 +1,3 @@
+nagios-plugins-extra source: maintainer-address-malformed Sébastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
+nagios-plugins-extra source: quilt-build-dep-but-no-series-file nagios-plugins-extra
+nagios-plugins-extra source: native-package-with-dash-version
