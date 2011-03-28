@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# check_varnish_status --- Check varnish status
+# Copyright © 2010 Sebastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
+# Last changed: 2011-03-28 13:55:01
+
+# This program is free software. It comes without any warranty, to
+# the extent permitted by applicable law. You can redistribute it
+# and/or modify it under the terms of the Do What The Fuck You Want
+# To Public License, Version 2, as published by Sam Hocevar. See
+# http://sam.zoy.org/wtfpl/COPYING for more details.
+
+VERSION="1.0"
+
+E_SUCCESS="0"
+E_WARNING="1"
+E_CRITICAL="2"
+E_UNKNOWN="3"
+
+PATH="/sbin:/bin:/usr/sbin:/usr/bin"
+
+# default values
+address="127.0.0.1:6082"
+secret_file="/etc/varnish/secret"
+
+function die() {
+    echo "$@" >&2
+    exit 1
+}
+
+function usage() {
+    exit_code=${1:-1}
+    cat <<EOF
+    $(basename $0) Version ${VERSION}
+    Copyright © 2010 Sébastien Gross <seb•ɑƬ•chezwam•ɖɵʈ•org>
+    
+    $(basename $0) [ options ]
+    
+    Options:
+    -T      HOST[:PORT]   Varnish management interface
+    -S      FILE          Varnish secret file
+    -h|--help             This help screen.
+    
+EOF
+    exit ${exit_code}
+}
+
+while test $# != 0; do
+    case "$1" in
+	-T)
+            test -z "$2" && die "Need a parameter for $1."
+            address=$2
+            shift
+            ;;
+	-S)
+            test -z "$2" && die "Need a parameter for $1."
+            secret_file=$2
+            shift
+            ;;
+        --help|-h) usage 0 ;;
+	--) shift; break ;;
+        -*|*) usage ;;
+    esac
+    shift
+done
+
+result=$(varnishadm -T ${address} -S ${secret_file} status)
+
+
+
+if test "${result}" == "Child in state running"; then
+    echo "Varnish OK: ${result}"
+    exit ${E_SUCCESS}
+else
+    echo "Varnish CRITICAL: ${result}"
+    exit ${E_CRITICAL}
+fi
